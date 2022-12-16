@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="css/gallery.css">
+  
+</head>
+<body>
+  <div class="photo-list">
+	<div class="photo"><img src="https://images.unsplash.com/photo-1517330357046-3ab5a5dd42a1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2134&q=80" alt=""><span>Jodhpur, India</span></div>
+	<div class="photo"><img src="https://images.unsplash.com/photo-1524492412937-b28074a5d7da?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1951&q=80" alt=""><span>Agra, India</span></div>
+	<div class="photo"><img src="https://images.unsplash.com/photo-1524613032530-449a5d94c285?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80" alt=""><span>Taj Mahal, Agra, India</span></div>
+	<div class="photo"><img src="https://images.unsplash.com/photo-1515091943-9d5c0ad475af?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1535&q=80" alt=""><span>New Delhi, India</span></div>
+	<div class="photo"><img src="https://images.unsplash.com/photo-1461603950871-cd64bcf7acf0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2033&q=80" alt=""><span>Amber Palace, Jaipur, India</span></div>
+	<div class="photo"><img src="https://images.unsplash.com/photo-1500614922032-b6dd337b1313?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80" alt=""><span>Jim Corbett National Park, Ramnagar, India</span></div>
+	<div class="photo"><img src="https://images.unsplash.com/photo-1477587458883-47145ed94245?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80" alt=""><span>Hawa Mahal Road, Jaipur, India</span></div>
+	<div class="photo"><img src="https://images.unsplash.com/photo-1528034342377-c406327f14b7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2089&q=80" alt=""><span>Alappuzha, India</span></div>
+	<div class="photo"><img src="https://images.unsplash.com/photo-1504705759706-c5ee7158f8bb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80" alt=""><span>Jal Mahal, Jaipur, India</span></div>
+	<div class="photo"><img src="https://images.unsplash.com/photo-1586023546861-cd6c3332607c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2132&q=80" alt=""><span>Gwalior, Madhya Pradesh, India</span></div>
+</div>
+<div id="dimmed"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.1/gsap.min.js" integrity="sha512-Mf/xUqfWvDIr+1B6zfnIDIiG7XHzyP/guXUWgV6PgaQoIFeXkJQR5XWh9fqAiCiRCpemabt3naV4jhDWVnuYDQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script> 
+var photos = $(".photo-list .photo");
+var dimmed = $("#dimmed");
+var tlDimmed = gsap.timeline({ paused: true });
+
+tlDimmed.to(dimmed, {
+  duration: 0.5,
+  opacity: 1,
+  onStart: function () {
+    dimmed.show();
+  },
+  onReverseComplete: function () {
+    dimmed.hide();
+  },
+});
+
+photos.each(function () {
+  var photo = $(this);
+  var tlPhoto = gsap.timeline({ paused: true });
+  var isZoom = false;
+
+  gsap.set(photo, {
+    x: gsap.utils.random(-window.innerWidth/4,window.innerWidth/4, 50),
+    y: gsap.utils.random(-window.innerHeight/3,window.innerHeight/3, 50),
+    rotation: gsap.utils.random(0, 40),
+    scale: gsap.utils.random(0.4, 0.5),
+  });
+
+  tlPhoto.to(photo, {
+    duration: 0.5,
+    x: 0,
+    y: 0,
+    rotation: 0,
+    scale: 1,
+    onStart: function () {
+      photo.css("zIndex", 20);
+    },
+    onReverseComplete: function () {
+      photo.css("zIndex", 1);
+    },
+  });
+  tlPhoto.to(photo.find("span"), {
+    duration: 0.3,
+    delay: -0.2,
+    opacity: 1,
+  });
+
+  photo.on("click", function () {
+    if (!isZoom) {
+      tlPhoto.play();
+      tlDimmed.play();
+      isZoom = true;
+    } else {
+      tlPhoto.reverse();
+      tlDimmed.reverse();
+      isZoom = false;
+    }
+  });
+});
+</script>
+
+<a class="youtube-link" target="_blank">Phong's Photos</a>
+</body>
+</html>
