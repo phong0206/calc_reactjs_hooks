@@ -1,6 +1,7 @@
 # calc_reactjs_hooks
 project setup
-npm install 
+`npm install `
 
 project run
-npm start
+`npm start`
+
